@@ -1,0 +1,132 @@
+package Engine;
+
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
+/**
+ * Clase principal que gestiona el hilo de ejecución y el bucle de juego.
+ * @author elProfesorEmilio
+ */
+public class Game implements Runnable {
+
+    private final Window window;
+    private boolean running = false;
+
+    // Configuración del tiempo (60 actualizaciones por segundo)
+    private static final int UPS = 60;
+    private static final double NS_PER_TICK = 1000000000.0 / UPS;
+
+    // Referencia a la escena actual
+    private Scene currentScene;
+
+    // Manejador de la entrada
+    private static final InputHandler input = new InputHandler();
+
+    public Game(int width, int height, String title) {
+        this.window = new Window(width, height, title);
+        this.window.getCanvas().addKeyListener(input); // Conectamos teclado al canvas
+    }
+
+    /**
+     * Permite cambiar la escena actual del motor.
+     * @param nextScene La nueva instancia de Engine.Scene a ejecutar.
+     */
+    public void setScene(Scene nextScene) {
+        this.currentScene = nextScene;
+    }
+
+    /**
+     * Inicia el hilo del juego.
+     */
+    public synchronized void start() {
+        if (running) return;
+        running = true;
+        Thread thread = new Thread(this, "GameThread");
+        thread.start();
+    }
+
+    /**
+     * Bucle principal del juego con Delta Time.
+     */
+    @Override
+    public void run() {
+        long lastTime = System.nanoTime();
+        double delta = 0;
+
+        // Variables para monitorizar FPS y UPS en consola
+        long timer = System.currentTimeMillis();
+        int frames = 0;
+        int ticks = 0;
+
+        while (running) {
+            long now = System.nanoTime();
+            delta += (now - lastTime) / NS_PER_TICK;
+            lastTime = now;
+
+            // Mientras delta sea >= 1, actualizamos la lógica
+            while (delta >= 1) {
+                // 2. ACTUALIZAR LÓGICA (Donde se pregunta isKeyPressed)
+                update((float)delta);
+
+                // 3. UNA VEZ terminada la lógica, actualizamos el historial de teclas.
+                input.update();
+
+                ticks++;
+                delta--;
+            }
+
+            render();
+            frames++;
+
+            // Muestra rendimiento cada segundo
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer += 1000;
+                System.out.println("UPS: " + ticks + " FPS: " + frames);
+                ticks = 0;
+                frames = 0;
+            }
+        }
+    }
+
+    /**
+     * Actualiza la lógica de todos los objetos.
+     * @param delta Factor de tiempo para que el movimiento sea independiente de los frames.
+     */
+    private void update(float delta) {
+        if (currentScene != null) {
+            currentScene.update(delta);
+        }
+    }
+
+    /**
+     * Se encarga de dibujar el frame actual usando BufferStrategy.
+     */
+    private void render() {
+        BufferStrategy bs = window.getCanvas().getBufferStrategy();
+
+        if (bs == null) {
+            // Creamos 3 buffers para evitar cualquier parpadeo
+            window.getCanvas().createBufferStrategy(3);
+            return;
+        }
+
+        Graphics g = bs.getDrawGraphics();
+
+        // 1. Limpiar pantalla
+        g.clearRect(0, 0, window.getWidth(), window.getHeight());
+
+        // 2. Dibujar escena
+        if (currentScene != null) {
+            currentScene.render(g);
+        }
+
+        // 3. Mostrar y liberar recursos
+        g.dispose();
+        bs.show();
+    }
+
+    public static InputHandler getInput() {
+        return input;
+    }
+
+}
