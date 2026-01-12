@@ -22,7 +22,7 @@ public class MenuScene extends Scene {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.drawString("MENU PRINCIPAL - Pulsa ESPACIO para jugar", 250, 300);
         super.render(g);

@@ -3,8 +3,7 @@ package SimpleSample;
 import Engine.Game;
 import Engine.Scene;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
@@ -40,7 +39,7 @@ public class Level1 extends Scene {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics2D g) {
         // Dibujamos un fondo específico para este nivel
         g.setColor(new Color(30, 30, 30)); // Gris oscuro
         g.fillRect(0, 0, 800, 600);

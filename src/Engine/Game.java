@@ -1,6 +1,6 @@
 package Engine;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 /**
@@ -65,10 +65,10 @@ public class Game implements Runnable {
 
             // Mientras delta sea >= 1, actualizamos la lógica
             while (delta >= 1) {
-                // 2. ACTUALIZAR LÓGICA (Donde se pregunta isKeyPressed)
+                // 1. ACTUALIZAR LÓGICA del juego
                 update((float)delta);
 
-                // 3. UNA VEZ terminada la lógica, actualizamos el historial de teclas.
+                // 2. UNA VEZ terminada la lógica, actualizamos el historial de teclas.
                 input.update();
 
                 ticks++;
@@ -110,7 +110,7 @@ public class Game implements Runnable {
             return;
         }
 
-        Graphics g = bs.getDrawGraphics();
+        Graphics2D g = (Graphics2D)bs.getDrawGraphics();
 
         // 1. Limpiar pantalla
         g.clearRect(0, 0, window.getWidth(), window.getHeight());

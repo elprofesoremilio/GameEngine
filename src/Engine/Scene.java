@@ -1,6 +1,6 @@
 package Engine;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class Scene {
      * Dibuja todos los objetos de la escena.
      * @param g Contexto gráfico proporcionado por el motor (Engine.Game).
      */
-    public void render(Graphics g) {
+    public void render(Graphics2D g) {
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).render(g);
         }
