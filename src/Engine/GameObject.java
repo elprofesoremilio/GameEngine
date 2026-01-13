@@ -1,6 +1,6 @@
 package Engine;
 
-import java.awt.Graphics;
+import java.awt.*;
 
 /**
  * Representa la base para cualquier objeto del juego.
@@ -12,7 +12,7 @@ public abstract class GameObject {
     // Usamos protected para que las clases hijas puedan acceder directamente
     protected float x, y;
     protected int width, height;
-    protected float velX, velY;
+    protected float speedX, speedY;
 
     /**
      * Constructor base para un objeto de juego.
@@ -26,8 +26,8 @@ public abstract class GameObject {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.velX = 0;
-        this.velY = 0;
+        this.speedX = 0;
+        this.speedY = 0;
     }
 
     /**
@@ -40,7 +40,7 @@ public abstract class GameObject {
      * Define cómo se dibuja el objeto en pantalla.
      * @param g El contexto gráfico (el pincel).
      */
-    public abstract void render(Graphics g);
+    public abstract void render(Graphics2D g);
 
     // --- Getters y Setters (Encapsulamiento) ---
 
@@ -54,7 +54,7 @@ public abstract class GameObject {
     public int getHeight() { return height; }
 
     public void setVelocity(float velX, float velY) {
-        this.velX = velX;
-        this.velY = velY;
+        this.speedX = velX;
+        this.speedY = velY;
     }
 }

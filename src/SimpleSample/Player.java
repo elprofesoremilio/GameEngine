@@ -3,8 +3,7 @@ package SimpleSample;
 import Engine.GameObject;
 import Engine.InputHandler;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 public class Player extends GameObject {
     private InputHandler input;
@@ -26,7 +25,7 @@ public class Player extends GameObject {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics2D g) {
         g.setColor(Color.RED);
         g.fillRect((int)x, (int)y, width, height);
     }
