@@ -1,0 +1,90 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+
+class Game {
+    - currentScene: Scene
+    - input: InputHandler
+    + Game(width: int, height: int, title: String)
+    + setScene(next: Scene)
+    + start()
+}
+note right of Game
+  **EL MOTOR:**
+  Contiene el Game Loop (Runnable).
+  Gestiona el Delta Time.
+  Coordina el paso de tiempo entre
+  Input, Update y Render.
+end note
+
+abstract class GameObject {
+    # x: float
+    # y: float
+    # width: int
+    # height: int
+    + {abstract} update(delta: float)
+    + {abstract} render(g: Graphics)
+}
+note right of GameObject
+  **CONSEJO POO:**
+  Es una clase abstracta: no se puede instanciar.
+  Obliga a implementar 'update' y 'render'.
+  Usa 'protected' (#) para que los hijos hereden los atributos.
+  Recuerda que x e y son float, así que para dibujarlos
+  deberás hacer casting a int --> (int)x
+end note
+
+class Scene {
+    - objects: List<GameObject>
+    + addObject(obj: GameObject)
+    + update(delta: float)
+    + render(g: Graphics)
+}
+note right of Scene
+  **CONSEJO POO:**
+  Aplica Polimorfismo. Maneja GameObjects
+  sin saber qué son exactamente.
+  itera con un 'for' clásico para evitar
+  errores de modificación concurrente.
+  Cuando sobrescribas update o render,
+  recuerda llamar a super.update() y super.render()
+end note
+
+class Window {
+    - canvas: Canvas
+    + getCanvas(): Canvas
+}
+note top of Window
+  **CONSEJO:**
+  Usa Canvas para Renderizado Activo.
+end note
+
+class InputHandler {
+    + up : boolean
+    + down : boolean
+    + left : boolean
+    + right : boolean
+    + space : boolean
+    - keys: boolean[]
+    - keysLast: boolean[]
+    + isKeyHeld(code: int): boolean
+    + isKeyPressed(code: int): boolean
+    + postUpdate()
+}
+note bottom of InputHandler
+  **SINCRONIZACIÓN:**
+  Si solo quiero flechas y espacio basta
+  llamar a Game.getInput().up
+  Mejor guarda en una variable el input:
+  InputHandler input = Game.getInput()
+  Recuerda que para teclas específicas existen
+  las constantes de KeyEvent.
+end note
+
+Game "1" *-- "1" Window : contiene >
+Game "1" *-- "1" InputHandler : contiene >
+Game "1" o-- "1" Scene : gestiona >
+Scene "1" o-- "*" GameObject : contiene >
+
+@enduml
