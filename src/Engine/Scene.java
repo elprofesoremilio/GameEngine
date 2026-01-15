@@ -45,11 +45,28 @@ public class Scene {
      * Actualiza todos los objetos de la escena.
      * Aquí se aplica el Polimorfismo: llamamos a update() sin saber 
      * si el objeto es un Jugador, Enemigo o Bala.
+     * Además, se comprueban colisiones entre todos los objetos que implementen Collidable.
      * @param delta Factor de tiempo.
      */
     public void update(float delta) {
+        // 1. Actualizar posiciones primero
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).update(delta);
+        }
+
+        // 2. Comprobar colisiones (Algoritmo de fuerza bruta O(n²))
+        for (int i = 0; i < objects.size(); i++) {
+            GameObject a = objects.get(i);
+
+            for (int j = i + 1; j < objects.size(); j++) {
+                GameObject b = objects.get(j);
+
+                if (a.intersects(b)) {
+                    // Si implementaste la interfaz:
+                    if (a instanceof Collidable) ((Collidable)a).onCollision(b);
+                    if (b instanceof Collidable) ((Collidable)b).onCollision(a);
+                }
+            }
         }
     }
 

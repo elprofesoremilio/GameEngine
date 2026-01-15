@@ -24,6 +24,7 @@ public class Game implements Runnable {
 
     static {
         String os = System.getProperty("os.name").toLowerCase();
+        System.out.println("Sistema: " + os);
         if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
             // Estamos en Linux/Unix
             System.out.println("[Motor] Detectado Linux: Activando optimizaciones de OpenGL...");

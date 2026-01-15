@@ -57,4 +57,20 @@ public abstract class GameObject {
         this.speedX = velX;
         this.speedY = velY;
     }
+
+    public void setVelocityX(float velX) {
+        this.speedX = velX;
+    }
+
+    public void setVelocityY(float velY) {
+        this.speedY = velY;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int)x, (int)y, width, height);
+    }
+
+    public boolean intersects(GameObject other) {
+        return this.getBounds().intersects(other.getBounds());
+    }
 }
