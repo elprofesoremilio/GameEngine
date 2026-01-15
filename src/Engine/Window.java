@@ -27,6 +27,7 @@ public class Window extends JFrame {
         canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(width, height));
         canvas.setFocusable(true); // Permite que el canvas capture el teclado
+        canvas.setIgnoreRepaint(true);
 
         this.add(canvas);
         this.pack(); // Ajusta el JFrame al tamaño del Canvas

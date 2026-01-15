@@ -22,6 +22,21 @@ public class Game implements Runnable {
     // Manejador de la entrada
     private static final InputHandler input = new InputHandler();
 
+    static {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+            // Estamos en Linux/Unix
+            System.out.println("[Motor] Detectado Linux: Activando optimizaciones de OpenGL...");
+            System.setProperty("sun.java2d.opengl", "true");
+
+            // Desactiva el parpadeo provocado por el gestor de ventanas
+            System.setProperty("sun.java2d.pmoffscreen", "false");
+
+            // Mejora el rendimiento del cursor y eventos en X11
+            System.setProperty("sun.java2d.xrender", "true");
+        }
+    }
+
     public Game(int width, int height, String title) {
         this.window = new Window(width, height, title);
         this.window.getCanvas().addKeyListener(input); // Conectamos teclado al canvas
