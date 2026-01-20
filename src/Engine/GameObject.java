@@ -13,6 +13,7 @@ public abstract class GameObject {
     protected float x, y;
     protected int width, height;
     protected float speedX, speedY;
+    protected Scene scene;
 
     /**
      * Constructor base para un objeto de juego.
@@ -21,13 +22,14 @@ public abstract class GameObject {
      * @param width Ancho del objeto.
      * @param height Alto del objeto.
      */
-    public GameObject(float x, float y, int width, int height) {
+    public GameObject(float x, float y, int width, int height, Scene scene) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.speedX = 0;
         this.speedY = 0;
+        this.scene = scene;
     }
 
     /**
