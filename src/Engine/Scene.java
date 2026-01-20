@@ -86,4 +86,8 @@ public class Scene {
             objects.get(i).render(g);
         }
     }
+
+    public InputHandler getInput() {
+        return input;
+    }
 }

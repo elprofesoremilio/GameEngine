@@ -2,6 +2,7 @@ package SimpleSample;
 
 import Engine.GameObject;
 import Engine.InputHandler;
+import Engine.Scene;
 
 import java.awt.*;
 
@@ -9,9 +10,9 @@ public class Player extends GameObject {
     private InputHandler input;
     private float speed = 5.0f;
 
-    public Player(float x, float y, InputHandler input) {
-        super(x, y, 32, 32);
-        this.input = input;
+    public Player(float x, float y, Scene scene) {
+        super(x, y, 32, 32, scene);
+        this.input = scene.getInput();
     }
 
     @Override

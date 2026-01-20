@@ -19,7 +19,7 @@ public class Level1 extends Scene {
 
         // Añadimos los objetos iniciales del nivel
         // Usamos el polimorfismo: addObject recibe Engine.GameObject, le pasamos un SimpleSample.Player
-        this.addObject(new Player(400, 300, input));
+        this.addObject(new Player(400, 300, this));
 
         // Podríamos añadir enemigos o obstáculos aquí
         // this.addObject(new Obstacle(200, 200));
