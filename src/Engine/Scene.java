@@ -87,11 +87,23 @@ public class Scene {
         }
     }
 
-    public InputHandler getInput() {
-        return input;
+    /**
+     * Cuenta cuántos objetos de un tipo específico hay en la escena.
+     * @param type Clase del objeto a contar.
+     * @return Número de objetos de ese tipo.
+     */
+    public int getCountOf(Class<?> type) {
+        int count = 0;
+        for (GameObject obj : objects) {
+            // Comprobamos si el objeto es de la clase que buscamos o una hija
+            if (type.isInstance(obj)) {
+                count++;
+            }
+        }
+        return count;
     }
 
-    public Game getGame() {
-        return game;
-    }
+    public InputHandler getInput() { return input; }
+
+    public Game getGame() { return game; }
 }
