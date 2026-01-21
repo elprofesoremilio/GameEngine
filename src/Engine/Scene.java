@@ -24,7 +24,7 @@ public class Scene {
         this.objects = new ArrayList<>();
         this.toRemove = new ArrayList<>();
         this.game = game;
-        this.input = Game.getInput();
+        this.input = game.getInput();
     }
 
     /**
@@ -89,5 +89,9 @@ public class Scene {
 
     public InputHandler getInput() {
         return input;
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

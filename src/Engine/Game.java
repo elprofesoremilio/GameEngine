@@ -20,7 +20,7 @@ public class Game implements Runnable {
     private Scene currentScene;
 
     // Manejador de la entrada
-    private static final InputHandler input = new InputHandler();
+    private final InputHandler input = new InputHandler();
 
     static {
         String os = System.getProperty("os.name").toLowerCase();
@@ -141,7 +141,7 @@ public class Game implements Runnable {
         bs.show();
     }
 
-    public static InputHandler getInput() {
+    public InputHandler getInput() {
         return input;
     }
 
