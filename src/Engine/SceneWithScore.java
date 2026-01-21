@@ -4,21 +4,22 @@ import java.awt.*;
 
 public class SceneWithScore extends Scene {
     protected int score;
-
-    public SceneWithScore(Game game) {
-        super(game);
-        int score = 0;
-    }
+    protected String scoreText;
 
     public SceneWithScore(Game game, int score) {
         super(game);
         this.score = score;
+        scoreText = "Score: ";
+    }
+
+    public SceneWithScore(Game game) {
+        this(game,0);
     }
 
     @Override
     public void render(Graphics2D g) {
         super.render(g);
-        String scoreString = String.format("Puntuación: %02d", score);
+        String scoreString = String.format("%s%02d", scoreText, score);
         TextRenderer.draw(g, scoreString, 10, 30, new Font("Arial", Font.BOLD, 20), Color.BLUE);
     }
 

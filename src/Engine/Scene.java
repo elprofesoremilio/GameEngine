@@ -17,14 +17,18 @@ public class Scene {
      */
     private List<GameObject> objects;
     private List<GameObject> toRemove;
+
     protected Game game; // Referencia al motor para poder pedir cambios de escena
     protected InputHandler input;
+
+    protected Color backgroundColor;
 
     public Scene(Game game) {
         this.objects = new ArrayList<>();
         this.toRemove = new ArrayList<>();
         this.game = game;
         this.input = game.getInput();
+        backgroundColor = null;
     }
 
     /**
@@ -82,6 +86,12 @@ public class Scene {
      * @param g Contexto gráfico proporcionado por el motor (Engine.Game).
      */
     public void render(Graphics2D g) {
+        if (backgroundColor != null) {
+            // Fondo genérico de nivel
+            g.setColor(backgroundColor);
+            g.fillRect(0, 0, game.getWidth(), game.getHeight());
+
+        }
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).render(g);
         }
