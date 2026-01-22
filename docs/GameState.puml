@@ -1,0 +1,127 @@
+@startuml
+class Engine.TextRenderer {
+- {static} FontMetrics setup(Graphics2D,Font,Color)
++ {static} void draw(Graphics2D,String,int,int,Font,Color)
++ {static} void draw(Graphics2D,String,int,int,Font,Color,Color)
++ {static} void drawCentered(Graphics2D,String,int,int,Font,Color,Color)
++ {static} void drawHorizontallyCentered(Graphics2D,String,int,int,Font,Color)
++ {static} void drawRightAligned(Graphics2D,String,int,int,Font,Color,Color)
+- {static} void drawWithOptionalBackground(Graphics2D,String,int,int,FontMetrics,Color,Color)
++ {static} void drawWithShadow(Graphics2D,String,int,int,Font,Color)
+}
+
+class Engine.Scene {
+- List<GameObject> objects
+- List<GameObject> toRemove
+# Game game
+# InputHandler input
+# Color backgroundColor
++ <<Create>> Scene(Game)
++ void addObject(GameObject)
++ void removeObject(GameObject)
++ void update(float)
++ void render(Graphics2D)
++ int getCountOf(Class<?>)
++ int countIf(Predicate<GameObject>)
++ InputHandler getInput()
++ Game getGame()
+}
+
+
+class Engine.Game {
+- Window window
+- boolean running
+- {static} int UPS
+- {static} double NS_PER_TICK
+- Scene currentScene
+- InputHandler input
+- int width
+- GameState gameState
++ <<Create>> Game(int,int,String)
++ void setScene(Scene)
++ void start()
++ void run()
+- void update(float)
+- void render()
++ InputHandler getInput()
++ int getWidth()
++ int getHeight()
++ GameState getGameState()
++ void resetState()
+}
+
+
+interface Engine.Collidable {
+~ void onCollision(GameObject)
+}
+
+class Engine.GameState {
+- int score
+- int lives
+- int level
++ <<Create>> GameState()
++ void reset()
++ void addScore(int)
++ void loseLife()
++ void addLife()
++ int getScore()
++ int getLives()
++ int getLevel()
++ void setLevel(int)
+}
+
+
+class Engine.InputHandler {
+- boolean[] keys
++ boolean up
+- boolean[] keysLast
++ void update()
++ boolean isKeyHeld(int)
++ boolean isKeyPressed(int)
++ void keyPressed(KeyEvent)
++ void keyReleased(KeyEvent)
++ void keyTyped(KeyEvent)
+}
+
+
+abstract class Engine.GameObject {
+# float x
+# int width
+# float speedX
+# Scene scene
++ <<Create>> GameObject(float,float,int,int,Scene)
++ {abstract}void update(float)
++ {abstract}void render(Graphics2D)
++ float getX()
++ void setX(float)
++ float getY()
++ void setY(float)
++ int getWidth()
++ int getHeight()
++ void setVelocity(float,float)
++ void setVelocityX(float)
++ void setVelocityY(float)
++ Rectangle getBounds()
++ boolean intersects(GameObject)
+}
+
+
+class Engine.Window {
+- Canvas canvas
++ <<Create>> Window(int,int,String)
++ Canvas getCanvas()
+}
+
+
+
+
+Engine.Runnable <|.. Engine.Game
+java.awt.event.KeyListener <|.. Engine.InputHandler
+javax.swing.JFrame <|-- Engine.Window
+Engine.Game o-- Engine.Window
+Engine.Game o-- Engine.Scene
+Engine.Game o-- Engine.InputHandler
+Engine.Scene o-- Engine.GameObject
+Engine.GameObject ..|> Engine.Collidable
+Engine.Game o-- Engine.GameState
+@enduml
