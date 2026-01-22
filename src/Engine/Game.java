@@ -23,6 +23,7 @@ public class Game implements Runnable {
     private final InputHandler input = new InputHandler();
 
     private int width, height;
+    private GameState gameState;
 
     static {
         String os = System.getProperty("os.name").toLowerCase();
@@ -45,6 +46,7 @@ public class Game implements Runnable {
         this.window.getCanvas().addKeyListener(input); // Conectamos teclado al canvas
         this.width = width;
         this.height = height;
+        this.gameState = new GameState();
     }
 
     /**
@@ -156,4 +158,13 @@ public class Game implements Runnable {
     public int getHeight() {
         return height;
     }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void resetState() {
+        gameState.reset();
+    }
+
 }

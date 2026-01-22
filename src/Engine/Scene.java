@@ -3,6 +3,7 @@ package Engine;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Gestiona todos los GameObjects que coexisten en un momento dado.
@@ -107,6 +108,22 @@ public class Scene {
         for (GameObject obj : objects) {
             // Comprobamos si el objeto es de la clase que buscamos o una hija
             if (type.isInstance(obj)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Cuenta objetos que cumplan una condición específica.
+     * @param condition Condición que deben cumplir los objetos a contar
+     *                  Condición de ejemplo: obj -> obj instanceof Brick && !((Brick) obj).isUnbreakable()
+     * @return Número de objetos que cumplen la condición.
+     */
+    public int countIf(Predicate<GameObject> condition) {
+        int count = 0;
+        for (GameObject obj : objects) {
+            if (condition.test(obj)) {
                 count++;
             }
         }
