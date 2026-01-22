@@ -12,6 +12,10 @@ public class InputHandler implements KeyListener {
     public boolean up, down, left, right, space;
     private boolean[] keysLast = new boolean[256]; // Estado en el frame anterior
 
+    /**
+     * Actualiza el estado de las teclas.
+     * Debe llamarse una vez por frame, se hace automáticamente en la clase Game.
+     */
     public void update() {
         up = keys[KeyEvent.VK_W] || keys[KeyEvent.VK_UP];
         down = keys[KeyEvent.VK_S] || keys[KeyEvent.VK_DOWN];

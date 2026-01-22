@@ -1,0 +1,417 @@
+@startuml
+class TextRenderer {
+- {static} FontMetrics setup(Graphics2D,Font,Color)
++ {static} void draw(Graphics2D,String,int,int,Font,Color)
++ {static} void draw(Graphics2D,String,int,int,Font,Color,Color)
++ {static} void drawCentered(Graphics2D,String,int,int,Font,Color,Color)
++ {static} void drawHorizontallyCentered(Graphics2D,String,int,int,Font,Color)
++ {static} void drawRightAligned(Graphics2D,String,int,int,Font,Color,Color)
+- {static} void drawWithOptionalBackground(Graphics2D,String,int,int,FontMetrics,Color,Color)
++ {static} void drawWithShadow(Graphics2D,String,int,int,Font,Color)
+}
+note top of TextRenderer
+
+ * Clase de utilidad para facilitar el dibujado de texto con formato y alineación.
+ 
+end note
+
+note left of TextRenderer::setup(Graphics2D,Font,Color)
+ Centralizamos la configuración para no repetir código
+end note
+note right of TextRenderer::draw(Graphics2D,String,int,int,Font,Color)
+
+     * Dibuja un texto permitiendo configurar fuente y color.
+     
+end note
+note left of TextRenderer::draw(Graphics2D,String,int,int,Font,Color,Color)
+
+     * Dibuja un texto permitiendo configurar fuente, color y color de fondo.
+     
+end note
+note right of TextRenderer::drawCentered(Graphics2D,String,int,int,Font,Color,Color)
+
+     * Dibuja un texto centrado totalmente en un área (por ejemplo, la pantalla).
+     * Permite especificar un color de fondo opcional.
+     
+end note
+note left of TextRenderer::drawHorizontallyCentered(Graphics2D,String,int,int,Font,Color)
+
+     * Dibuja un texto centrado solo horizontalmente en la Y que se le especifique
+     
+end note
+note right of TextRenderer::drawRightAligned(Graphics2D,String,int,int,Font,Color,Color)
+
+     * Dibuja un texto alineado a la derecha con respecto a una coordenada X que actúa como "tope".
+     * @param g Contexto gráfico.
+     * @param text Texto a dibujar.
+     * @param rightX La coordenada X donde debe terminar el texto.
+     * @param y Coordenada Y (línea base).
+     * @param font Fuente a utilizar.
+     * @param color Color del texto.
+     
+end note
+note left of TextRenderer::drawWithOptionalBackground(Graphics2D,String,int,int,FontMetrics,Color,Color)
+
+     * Método interno para evitar repetir la lógica del fondo.
+     * Si bgColor es null, no dibuja fondo.
+     
+end note
+note right of TextRenderer::drawWithShadow(Graphics2D,String,int,int,Font,Color)
+
+     * Dibuja un texto con sombra para mejorar la legibilidad.
+     
+end note
+
+class Scene {
+- List<GameObject> objects
+- List<GameObject> toRemove
+# Game game
+# InputHandler input
+# Color backgroundColor
++ <<Create>> Scene(Game)
++ void addObject(GameObject)
++ void removeObject(GameObject)
++ void update(float)
++ void render(Graphics2D)
++ int getCountOf(Class<?>)
++ int countIf(Predicate<GameObject>)
++ InputHandler getInput()
++ Game getGame()
+}
+note top of Scene
+
+ * Gestiona todos los GameObjects que coexisten en un momento dado.
+ * Se encarga de propagar las llamadas de update y render a cada objeto.
+ * @author elProfesorEmilio
+ 
+end note
+
+note left of Scene::objects
+
+     * Lista de objetos presentes en la escena.
+     * Usamos List (interfaz) para instanciar un ArrayList (polimorfismo de colecciones).
+     
+end note
+note right of Scene::game
+ Referencia al motor para poder pedir cambios de escena
+end note
+
+note left of Scene::addObject(GameObject)
+
+     * Añade un nuevo objeto a la escena.
+     * @param obj Cualquier instancia que herede de Engine.GameObject.
+     
+end note
+note right of Scene::removeObject(GameObject)
+
+     * Elimina un objeto de la escena.
+     * En lugar de borrar directamente, lo añadimos a una lista de espera.
+     * @param obj El objeto a eliminar.
+     
+end note
+note left of Scene::update(float)
+
+     * Actualiza todos los objetos de la escena.
+     * Aquí se aplica el Polimorfismo: llamamos a update() sin saber 
+     * si el objeto es un Jugador, Enemigo o Bala.
+     * Además, se comprueban colisiones entre todos los objetos que implementen Collidable.
+     * @param delta Factor de tiempo.
+     
+end note
+note right of Scene::render(Graphics2D)
+
+     * Dibuja todos los objetos de la escena.
+     * @param g Contexto gráfico proporcionado por el motor (Engine.Game).
+     
+end note
+note left of Scene::getCountOf(Class<?>)
+
+     * Cuenta cuántos objetos de un tipo específico hay en la escena.
+     * @param type Clase del objeto a contar.
+     * @return Número de objetos de ese tipo.
+     
+end note
+note right of Scene::countIf(Predicate<GameObject>)
+
+     * Cuenta objetos que cumplan una condición específica.
+     * @param condition Condición que deben cumplir los objetos a contar
+     *                  Condición de ejemplo: obj -> obj instanceof Brick && !((Brick) obj).isUnbreakable()
+     * @return Número de objetos que cumplen la condición.
+     
+end note
+
+class Game {
+- Window window
+- boolean running
+- {static} int UPS
+- {static} double NS_PER_TICK
+- Scene currentScene
+- InputHandler input
+- int width
+- GameState gameState
++ <<Create>> Game(int,int,String)
++ void setScene(Scene)
++ void start()
++ void run()
+- void update(float)
+- void render()
++ InputHandler getInput()
++ int getWidth()
++ int getHeight()
++ GameState getGameState()
++ void resetState()
+}
+note top of Game
+
+ * Clase principal que gestiona el hilo de ejecución y el bucle de juego.
+ * @author elProfesorEmilio
+ 
+end note
+
+note left of Game::UPS
+ Configuración del tiempo (60 actualizaciones por segundo)
+end note
+note right of Game::currentScene
+ Referencia a la escena actual
+end note
+note left of Game::input
+ Manejador de la entrada
+end note
+
+note left of Game::setScene(Scene)
+
+     * Permite cambiar la escena actual del motor.
+     * @param nextScene La nueva instancia de Engine.Scene a ejecutar.
+     
+end note
+note right of Game::start()
+
+     * Inicia el hilo del juego.
+     
+end note
+note left of Game::run()
+
+     * Método principal del juego con GameLoop basado en Delta Time.
+     * Se encarga de actualizar la lógica y renderizar los frames.
+     
+end note
+note right of Game::update(float)
+
+     * Actualiza la lógica de todos los objetos.
+     * @param delta Factor de tiempo para que el movimiento sea independiente de los frames.
+     
+end note
+note left of Game::render()
+
+     * Se encarga de dibujar el frame actual usando BufferStrategy.
+     
+end note
+note right of Game::resetState()
+
+     * Resetea el estado del juego a su configuración inicial.
+     
+end note
+
+interface Collidable {
+~ void onCollision(GameObject)
+}
+note left of Collidable::onCollision(GameObject)
+
+     * Se llama cuando este objeto colisiona con otro objeto.
+     * @param other El otro objeto con el que se ha colisionado.
+     
+end note
+
+class GameState {
+- int score
+- int lives
+- int level
++ <<Create>> GameState()
++ void reset()
++ void addScore(int)
++ void loseLife()
++ void addLife()
++ int getScore()
++ int getLives()
++ int getLevel()
++ void setLevel(int)
+}
+note top of GameState
+
+ * Clase que representa el estado del juego.
+ * Incluye atributos como puntuación, vidas y nivel actual.
+ 
+end note
+
+
+note left of GameState::reset()
+
+     * Resetea el estado del juego a los valores iniciales.
+     
+end note
+note right of GameState::addScore(int)
+
+     * Añade puntos a la puntuación actual.
+     * @param points Puntos a añadir
+     
+end note
+note left of GameState::loseLife()
+
+     * Resta una vida al juego.
+     
+end note
+note right of GameState::addLife()
+
+     * Añade una vida al juego.
+     
+end note
+note left of GameState::getScore()
+ Getters y Setters
+end note
+note right of GameState::setLevel(int)
+
+     * Establece el nivel actual del juego.
+     * @param level Nuevo nivel
+     
+end note
+
+class InputHandler {
+- boolean[] keys
++ boolean up
+- boolean[] keysLast
++ void update()
++ boolean isKeyHeld(int)
++ boolean isKeyPressed(int)
++ void keyPressed(KeyEvent)
++ void keyReleased(KeyEvent)
++ void keyTyped(KeyEvent)
+}
+note top of InputHandler
+
+ * Gestiona la entrada de teclado.
+ * @author elProfesorEmilio
+ 
+end note
+
+note left of InputHandler::keysLast
+ Estado en el frame anterior
+end note
+
+note left of InputHandler::update()
+
+     * Actualiza el estado de las teclas.
+     * Debe llamarse una vez por frame, se hace automáticamente en la clase Game.
+     
+end note
+note right of InputHandler::isKeyHeld(int)
+
+     * Devuelve true si la tecla está siendo mantenida pulsada.
+     * Útil para movimiento: if(input.isKeyHeld(KeyEvent.VK_W)) ...
+     
+end note
+note left of InputHandler::isKeyPressed(int)
+
+     * Devuelve true solo en el instante en que se presiona la tecla.
+     * Útil para acciones únicas: cambiar escena, disparar, saltar.
+     
+end note
+
+abstract class GameObject {
+# float x
+# int width
+# float speedX
+# Scene scene
++ <<Create>> GameObject(float,float,int,int,Scene)
++ {abstract}void update(float)
++ {abstract}void render(Graphics2D)
++ float getX()
++ void setX(float)
++ float getY()
++ void setY(float)
++ int getWidth()
++ int getHeight()
++ void setVelocity(float,float)
++ void setVelocityX(float)
++ void setVelocityY(float)
++ Rectangle getBounds()
++ boolean intersects(GameObject)
+}
+note top of GameObject
+
+ * Representa la base para cualquier objeto del juego.
+ * Define las propiedades físicas básicas y los métodos que toda entidad debe tener.
+ * @author elProfesorEmilio
+ 
+end note
+
+note left of GameObject::x
+ Usamos protected para que las clases hijas puedan acceder directamente
+end note
+
+note left of GameObject::GameObject(float,float,int,int,Scene)
+
+     * Constructor base para un objeto de juego.
+     * @param x Posición inicial en el eje X.
+     * @param y Posición inicial en el eje Y.
+     * @param width Ancho del objeto.
+     * @param height Alto del objeto.
+     
+end note
+note right of GameObject::update(float)
+
+     * Actualiza la lógica del objeto.
+     * @param delta El factor de tiempo para normalizar el movimiento.
+     
+end note
+note left of GameObject::render(Graphics2D)
+
+     * Define cómo se dibuja el objeto en pantalla.
+     * @param g El contexto gráfico (el pincel).
+     
+end note
+note right of GameObject::getBounds()
+
+     * Obtiene el rectángulo que representa los límites del objeto.
+     * @return Un objeto Rectangle con la posición y dimensiones del objeto.
+     
+end note
+note left of GameObject::intersects(GameObject)
+
+     * Verifica si este objeto colisiona con otro objeto.
+     * @param other El otro objeto de juego a verificar.
+     * @return true si hay colisión, false en caso contrario.
+     
+end note
+
+class Window {
+- Canvas canvas
++ <<Create>> Window(int,int,String)
++ Canvas getCanvas()
+}
+note top of Window
+
+ * Gestiona la ventana del juego y el área de dibujo (Canvas).
+ * @author elProfesorEmilio
+ 
+end note
+
+
+note left of Window::Window(int,int,String)
+
+     * Crea una ventana con dimensiones fijas.
+     * @param width Ancho en píxeles.
+     * @param height Alto en píxeles.
+     * @param title Título de la ventana.
+     
+end note
+
+
+
+Runnable <|.. Game
+KeyListener <|.. InputHandler
+JFrame <|-- Window
+Game o-- Window
+Game o-- Scene
+Game o-- InputHandler
+Scene o-- GameObject
+@enduml

@@ -68,10 +68,19 @@ public abstract class GameObject {
         this.speedY = velY;
     }
 
+    /**
+     * Obtiene el rectángulo que representa los límites del objeto.
+     * @return Un objeto Rectangle con la posición y dimensiones del objeto.
+     */
     public Rectangle getBounds() {
         return new Rectangle((int)x, (int)y, width, height);
     }
 
+    /**
+     * Verifica si este objeto colisiona con otro objeto.
+     * @param other El otro objeto de juego a verificar.
+     * @return true si hay colisión, false en caso contrario.
+     */
     public boolean intersects(GameObject other) {
         return this.getBounds().intersects(other.getBounds());
     }

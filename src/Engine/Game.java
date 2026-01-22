@@ -25,6 +25,9 @@ public class Game implements Runnable {
     private int width, height;
     private final GameState gameState;
 
+    /**
+     * Optimización específica para Linux/Unix al iniciar la clase.
+     */
     static {
         String os = System.getProperty("os.name").toLowerCase();
         System.out.println("Sistema: " + os);
@@ -68,7 +71,8 @@ public class Game implements Runnable {
     }
 
     /**
-     * Bucle principal del juego con Delta Time.
+     * Método principal del juego con GameLoop basado en Delta Time.
+     * Se encarga de actualizar la lógica y renderizar los frames.
      */
     @Override
     public void run() {
@@ -159,10 +163,11 @@ public class Game implements Runnable {
         return height;
     }
 
-    public GameState getGameState() {
-        return gameState;
-    }
+    public GameState getGameState() { return gameState; }
 
+    /**
+     * Resetea el estado del juego a su configuración inicial.
+     */
     public void resetState() {
         gameState.reset();
     }
