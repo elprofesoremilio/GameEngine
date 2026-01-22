@@ -23,7 +23,7 @@ public class Game implements Runnable {
     private final InputHandler input = new InputHandler();
 
     private int width, height;
-    private GameState gameState;
+    private final GameState gameState;
 
     static {
         String os = System.getProperty("os.name").toLowerCase();

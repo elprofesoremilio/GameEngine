@@ -16,8 +16,8 @@ public class Scene {
      * Lista de objetos presentes en la escena.
      * Usamos List (interfaz) para instanciar un ArrayList (polimorfismo de colecciones).
      */
-    private List<GameObject> objects;
-    private List<GameObject> toRemove;
+    private final List<GameObject> objects;
+    private final List<GameObject> toRemove;
 
     protected Game game; // Referencia al motor para poder pedir cambios de escena
     protected InputHandler input;
