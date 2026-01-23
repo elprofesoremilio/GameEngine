@@ -14,6 +14,7 @@ public abstract class GameObject {
     protected int width, height;
     protected float speedX, speedY;
     protected Scene scene;
+    protected float gravity;
 
     /**
      * Constructor base para un objeto de juego.
@@ -30,13 +31,21 @@ public abstract class GameObject {
         this.speedX = 0;
         this.speedY = 0;
         this.scene = scene;
+        this.gravity = 0;
     }
 
     /**
-     * Actualiza la lógica del objeto.
+     * Actualiza la lógica y la física del objeto.
      * @param delta El factor de tiempo para normalizar el movimiento.
+     * Las clases hijas pueden llamar a super.update(delta) para heredar este movimiento.
      */
-    public abstract void update(float delta);
+    public void update(float delta) {
+        // Aplicar gravedad a la velocidad vertical
+        speedY += gravity * delta;
+        // Aplicar velocidad a la posición
+        x += speedX * delta;
+        y += speedY * delta;
+    }
 
     /**
      * Define cómo se dibuja el objeto en pantalla.
@@ -46,6 +55,9 @@ public abstract class GameObject {
 
     // --- Getters y Setters (Encapsulamiento) ---
 
+    public void setGravity(float gravity) {
+        this.gravity = gravity;
+    }
     public float getX() { return x; }
     public void setX(float x) { this.x = x; }
 

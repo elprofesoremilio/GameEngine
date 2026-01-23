@@ -77,34 +77,33 @@ public class Game implements Runnable {
     @Override
     public void run() {
         long lastTime = System.nanoTime();
-        double delta = 0;
+        double accumulator = 0; // Renombramos delta a accumulator para mayor claridad
 
-        // Variables para monitorizar FPS y UPS en consola
         long timer = System.currentTimeMillis();
         int frames = 0;
         int ticks = 0;
 
+        // Calculamos cuánto dura un tick en SEGUNDOS (1 / 60.0 = 0.0166s)
+        final float secondsPerTick = (float)(NS_PER_TICK / 1000000000.0);
+
         while (running) {
             long now = System.nanoTime();
-            delta += (now - lastTime) / NS_PER_TICK;
+            accumulator += (now - lastTime) / NS_PER_TICK;
             lastTime = now;
 
-            // Mientras delta sea >= 1, actualizamos la lógica
-            while (delta >= 1) {
-                // 1. ACTUALIZAR LÓGICA del juego
-                update((float)delta);
+            while (accumulator >= 1) {
+                // PASAMOS EL TIEMPO REAL: secondsPerTick (aprox 0.016)
+                // Esto hace que el movimiento sea consistente
+                update(secondsPerTick);
 
-                // 2. UNA VEZ terminada la lógica, actualizamos el historial de teclas.
                 input.update();
-
                 ticks++;
-                delta--;
+                accumulator--;
             }
 
             render();
             frames++;
 
-            // Muestra rendimiento cada segundo
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 System.out.println("UPS: " + ticks + " FPS: " + frames);
