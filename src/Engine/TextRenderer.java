@@ -101,4 +101,32 @@ public class TextRenderer {
         draw(g, text, x + 2, y + 2, font, Color.BLACK); // Sombra
         draw(g, text, x, y, font, color); // Texto principal
     }
+
+    /**
+     * Dibuja texto con un borde (outline) de 1px para máxima legibilidad.
+     */
+    public static void drawWithOutline(Graphics2D g, String text, int x, int y, Font font, Color textColor, Color outlineColor) {
+        setup(g, font, outlineColor);
+        // Dibujamos el mismo texto desplazado en las 4 diagonales
+        g.drawString(text, x - 1, y - 1);
+        g.drawString(text, x + 1, y - 1);
+        g.drawString(text, x - 1, y + 1);
+        g.drawString(text, x + 1, y + 1);
+
+        g.setColor(textColor);
+        g.drawString(text, x, y);
+    }
+
+    /**
+     * Permite dibujar textos largos con saltos de línea (\n)
+     */
+    public static void drawMultiLine(Graphics2D g, String text, int x, int y, Font font, Color color) {
+        FontMetrics metrics = setup(g, font, color);
+        String[] lines = text.split("\n");
+        int currentY = y;
+        for (String line : lines) {
+            g.drawString(line, x, currentY);
+            currentY += metrics.getHeight();
+        }
+    }
 }
